@@ -1,0 +1,1013 @@
+<title>Vektor Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: tablero tipo Figma. Lienzo punteado, cada sección es un frame con etiqueta externa, encabezado gigante y bloques numerados. */
+:root{
+  color-scheme: dark;
+  /* Primitivos: Slate (gris pizarra con sesgo azul) */
+  --slate-950:#0B0E14; --slate-900:#11151D; --slate-800:#1A202C; --slate-700:#262D3B; --slate-600:#353E4F;
+  --slate-500:#4C5668; --slate-400:#7B8699; --slate-300:#9AA3B2; --slate-200:#C5CBD6; --slate-100:#E6E9EF;
+  /* Primitivos: Blue (marca) */
+  --blue-100:#E3EEFF; --blue-200:#BFD6FF; --blue-300:#8FB6FF; --blue-400:#5C93FF; --blue-500:#2F6CF6;
+  --blue-600:#1D4FD8; --blue-700:#1A3FAD; --blue-800:#173386; --blue-900:#14275F;
+  /* Estados */
+  --success:#3DD68C; --success-bg:#0F2E24; --success-line:#1F6B4C;
+  --warning:#F5B54A; --warning-bg:#35270F; --warning-line:#7A5A1E;
+  --error:#FF6B6B;   --error-bg:#3A1519;   --error-line:#8A2F36;
+  --info:#5C93FF;    --info-bg:#12254F;    --info-line:#24468F;
+  /* Roles usados por esta página */
+  --canvas:var(--slate-950); --frame:var(--slate-900); --raised:var(--slate-800); --overlay:var(--slate-700);
+  --line:var(--slate-700); --line-2:var(--slate-600);
+  --tx:var(--slate-100); --tx-2:var(--slate-300); --tx-3:var(--slate-400);
+  --brand:var(--blue-400);
+  --font:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"Geist Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background-color:var(--canvas);
+  background-image:radial-gradient(rgba(154,163,178,.14) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--tx);font:400 14px/1.5 var(--font);
+  padding-inline:clamp(16px,4vw,56px);padding-block:0 96px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1320px;margin-inline:auto}
+h1,h2,h3,h4,p{margin:0}
+h1,h2,h3,h4{text-wrap:balance}
+:focus-visible{outline:2px solid var(--blue-400);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.over{font:600 11px/16px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3)}
+svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.i.fill{fill:currentColor;stroke:none}
+
+/* ---------- Cabecera del tablero ---------- */
+.top{padding-block:56px 40px;display:grid;gap:32px}
+.top-row{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:12px;font:600 15px/1 var(--font)}
+.logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--blue-400),var(--blue-700));display:grid;place-items:center;color:#fff}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 12px/1 var(--mono);padding:7px 10px;border:1px solid var(--line-2);border-radius:999px;color:var(--tx-2);background:var(--frame)}
+.chip b{color:var(--tx);font-weight:500}
+.top h1{font:600 clamp(44px,9vw,128px)/.95 var(--font);letter-spacing:-.04em}
+.top h1 em{font-style:normal;color:var(--blue-400)}
+.top p.lead{max-width:62ch;font-size:18px;line-height:28px;color:var(--tx-2)}
+nav.index{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1*clamp(16px,4vw,56px));padding:12px clamp(16px,4vw,56px);background:rgba(11,14,20,.86);backdrop-filter:blur(10px);border-block:1px solid var(--line)}
+nav.index ul{list-style:none;margin:0 auto;padding:0;max-width:1320px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+nav.index a{display:flex;gap:8px;align-items:baseline;white-space:nowrap;padding:8px 12px;border-radius:8px;color:var(--tx-2);text-decoration:none;font-weight:500;border:1px solid transparent}
+nav.index a span{font:500 11px var(--mono);color:var(--blue-400)}
+nav.index a:hover{background:var(--raised);color:var(--tx);border-color:var(--line)}
+
+/* ---------- Frames ---------- */
+.frame-wrap{margin-top:72px;scroll-margin-top:72px}
+.frame-label{display:flex;align-items:center;gap:8px;font:500 12px/1 var(--mono);color:var(--tx-3);margin-bottom:12px}
+.frame-label i{width:10px;height:10px;border:1.5px solid var(--tx-3);border-radius:2px}
+.frame{background:var(--frame);border:1px solid var(--line-2);border-radius:16px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.45)}
+.frame-head{padding:clamp(24px,4vw,56px);display:grid;grid-template-columns:minmax(0,1.8fr) minmax(0,1fr);gap:32px 48px;align-items:end;border-bottom:1px solid var(--line-2);background:linear-gradient(180deg,rgba(47,108,246,.07),transparent 70%)}
+.frame-head .tag{font:600 14px/1 var(--mono);color:var(--blue-400);letter-spacing:.06em;margin-bottom:20px;display:block}
+.frame-head h2{font:600 clamp(40px,6.4vw,92px)/.98 var(--font);letter-spacing:-.04em;overflow-wrap:anywhere}
+.frame-head p{color:var(--tx-2);font-size:16px;line-height:26px;max-width:52ch}
+.block{padding:clamp(24px,4vw,56px);border-bottom:1px solid var(--line)}
+.block:last-child{border-bottom:0}
+.block-h{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;margin-bottom:28px}
+.block-h h3{font:600 28px/36px var(--font);letter-spacing:-.02em}
+.block-h .n{font:500 13px var(--mono);color:var(--blue-400)}
+.block-h p{flex-basis:100%;color:var(--tx-2);max-width:70ch}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.card{background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:20px;min-width:0}
+.card h4{font:600 16px/24px var(--font);margin-bottom:6px}
+.card p,.card li{color:var(--tx-2);font-size:14px;line-height:22px}
+.card ul,.card ol{margin:8px 0 0;padding-left:18px;display:grid;gap:6px}
+.card .k{font:600 12px/1 var(--mono);color:var(--blue-400);display:block;margin-bottom:14px}
+.sub{font:600 12px/16px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);margin:32px 0 14px}
+.sub:first-child{margin-top:0}
+.dd{display:grid;gap:10px}
+.do,.dont{border-radius:12px;padding:16px 18px;border:1px solid;font-size:14px;line-height:22px;color:var(--tx)}
+.do{background:var(--success-bg);border-color:var(--success-line)}
+.dont{background:var(--error-bg);border-color:var(--error-line)}
+.do b,.dont b{display:flex;align-items:center;gap:6px;font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.do b{color:var(--success)}.dont b{color:var(--error)}
+code,.code{font:500 12.5px var(--mono);background:var(--slate-950);border:1px solid var(--line);padding:1px 6px;border-radius:4px;color:var(--blue-200)}
+pre.code{padding:20px;border-radius:12px;overflow-x:auto;line-height:20px;color:var(--slate-200);margin:0;white-space:pre}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th{font:600 11px/16px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);text-align:left;padding:12px 16px;background:var(--slate-950);border-bottom:1px solid var(--line)}
+td{padding:14px 16px;border-bottom:1px solid var(--line);vertical-align:middle;color:var(--tx-2)}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--tx)}
+
+/* ---------- Swatches ---------- */
+.scale{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--line-2)}
+.sw{all:unset;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;min-height:132px;padding:12px;box-sizing:border-box}
+.sw:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+.sw b{font:600 15px/20px var(--font)}
+.sw span{font:500 11.5px/16px var(--mono);opacity:.85}
+.sw:hover b::after{content:" · copiar";font:500 11px var(--mono);opacity:.8}
+.scale-name{display:flex;justify-content:space-between;gap:12px;margin:0 0 10px;align-items:baseline;flex-wrap:wrap}
+.scale-name h4{font:600 18px/24px var(--font)}
+.scale-name span{color:var(--tx-3);font:500 12px var(--mono)}
+.status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px}
+.sgroup{border:1px solid var(--line-2);border-radius:12px;overflow:hidden}
+.sgroup .sw{min-height:84px;flex-direction:row;align-items:flex-end;justify-content:space-between;gap:8px}
+.role-swatch{width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,.14);display:block}
+.ratio{font:500 12px var(--mono);white-space:nowrap}
+.pass{color:var(--success)}.fail{color:var(--warning)}
+.rolegroups{display:grid;gap:28px}
+
+/* ---------- Tipografía ---------- */
+.type-row{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) minmax(0,220px);gap:12px 28px;align-items:baseline;padding:22px 0;border-bottom:1px solid var(--line)}
+.type-row:last-child{border-bottom:0}
+.type-row .nm{font:600 13px var(--mono);color:var(--blue-400)}
+.type-row .sp{font:400 12px/18px var(--mono);color:var(--tx-3)}
+.type-row .sample{min-width:0;overflow-wrap:anywhere}
+.t-display{font:600 56px/64px var(--font);letter-spacing:-.03em}
+.t-h1{font:600 40px/48px var(--font);letter-spacing:-.025em}
+.t-h2{font:600 32px/40px var(--font);letter-spacing:-.02em}
+.t-h3{font:600 24px/32px var(--font);letter-spacing:-.015em}
+.t-h4{font:600 20px/28px var(--font);letter-spacing:-.01em}
+.t-bl{font:400 16px/24px var(--font)}
+.t-b{font:400 14px/20px var(--font)}
+.t-lb{font:500 13px/16px var(--font)}
+.t-cap{font:400 12px/16px var(--font);color:var(--tx-2)}
+.t-ov{font:600 11px/16px var(--font);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-2)}
+.t-mono{font:500 13px/20px var(--mono)}
+.faces{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px}
+.face .aa{font:600 96px/1 var(--font);letter-spacing:-.04em;margin-bottom:12px}
+.face.m .aa{font-family:var(--mono);font-weight:500;font-size:84px;letter-spacing:-.02em}
+.weights{display:flex;gap:18px;flex-wrap:wrap;color:var(--tx-2);margin-top:12px;font-size:15px}
+
+/* ---------- Fundamentos ---------- */
+.sp-row{display:grid;grid-template-columns:90px 70px minmax(0,1fr);gap:16px;align-items:center;padding:9px 0}
+.sp-bar{height:16px;background:var(--blue-500);border-radius:3px;min-width:1px}
+.radius-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px}
+.rbox{aspect-ratio:1;background:var(--raised);border:1.5px solid var(--blue-400);border-right:0;border-bottom:0;display:block;margin-bottom:12px}
+.elev-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:24px;padding:28px;background:var(--slate-950);border:1px solid var(--line);border-radius:12px}
+.ebox{height:120px;border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:space-between}
+.e0{background:var(--slate-900);border:1px solid var(--slate-700)}
+.e1{background:var(--slate-800);border:1px solid var(--slate-700);box-shadow:0 1px 2px rgba(0,0,0,.5)}
+.e2{background:#1E2532;border:1px solid var(--slate-600);box-shadow:0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04)}
+.e3{background:#222A38;border:1px solid var(--slate-600);box-shadow:0 12px 28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.05)}
+.e4{background:#273041;border:1px solid var(--slate-500);box-shadow:0 24px 56px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.06)}
+.ebox b{font:600 14px var(--font)}.ebox span{font:400 11.5px/16px var(--mono);color:var(--tx-2)}
+
+/* ---------- Anatomía ---------- */
+.anat-stage{background:var(--slate-950);border:1px solid var(--line);border-radius:12px;padding:72px 24px 56px;display:flex;justify-content:center;align-items:center;overflow-x:auto}
+.anat{position:relative;display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 24px;border-radius:12px;background:var(--blue-600);color:#fff;font:500 18px var(--font);outline:2px dashed var(--blue-300);outline-offset:6px}
+.anat svg.i{width:22px;height:22px}
+.pin{position:relative;display:inline-flex;align-items:center}
+.pin::before{content:"";position:absolute;left:50%;top:-34px;height:26px;border-left:1px solid var(--blue-300)}
+.pin::after{content:attr(data-n);position:absolute;left:50%;top:-58px;transform:translateX(-50%);width:24px;height:24px;border-radius:50%;background:var(--blue-300);color:var(--slate-950);font:600 12px/24px var(--mono);text-align:center}
+.pin.l::before{left:18%}.pin.l::after{left:18%}.pin.r::before{left:88%}.pin.r::after{left:88%}
+.pin.b::before{top:auto;bottom:-34px}.pin.b::after{top:auto;bottom:-58px}
+.anat-in{position:relative;display:flex;flex-direction:column;gap:6px;width:min(100%,340px)}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.legend li{display:grid;grid-template-columns:24px 1fr;gap:12px;align-items:start;color:var(--tx-2)}
+.legend li b{color:var(--tx);font-weight:600}
+.legend i{width:24px;height:24px;border-radius:50%;background:var(--blue-300);color:var(--slate-950);font:600 12px/24px var(--mono);text-align:center;font-style:normal}
+.field-wrap{padding:56px 24px;background:var(--slate-950);border:1px solid var(--line);border-radius:12px;display:flex;justify-content:center;overflow-x:auto}
+
+/* ---------- Componentes ---------- */
+.matrix{border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+.mx{display:grid;grid-template-columns:130px repeat(5,minmax(140px,1fr));min-width:870px}
+.mx.c4{grid-template-columns:130px repeat(4,minmax(150px,1fr));min-width:760px}
+.mx.c3{grid-template-columns:130px repeat(3,minmax(190px,1fr));min-width:700px}
+.mx>div{padding:18px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;min-width:0}
+.mx>.h{background:var(--slate-950);font:600 11px/16px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--tx-3);padding:12px 16px}
+.mx>.r{font:600 13px var(--mono);color:var(--tx);background:rgba(11,14,20,.4)}
+.mx>div:nth-last-child(-n+6){border-bottom:0}
+.mx.c4>div:nth-last-child(-n+5){border-bottom:0}
+.mx.c3>div:nth-last-child(-n+4){border-bottom:0}
+.stack{display:grid;gap:36px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 14px;border-radius:8px;border:1px solid transparent;font:500 14px/1 var(--font);cursor:pointer;white-space:nowrap;transition:background .12s,border-color .12s,color .12s}
+.btn.s{height:28px;padding:0 10px;font-size:13px;border-radius:6px}
+.btn.l{height:44px;padding:0 20px;font-size:15px}
+.btn-primary{background:var(--blue-600);color:#fff}
+.btn-primary:hover,.btn-primary.is-hover{background:var(--blue-500)}
+.btn-primary:active,.btn-primary.is-pressed{background:var(--blue-700)}
+.btn-secondary{background:var(--slate-800);color:var(--slate-100);border-color:var(--slate-600)}
+.btn-secondary:hover,.btn-secondary.is-hover{background:var(--slate-700);border-color:var(--slate-500)}
+.btn-secondary:active,.btn-secondary.is-pressed{background:var(--slate-900);border-color:var(--slate-500)}
+.btn-ghost{background:transparent;color:var(--slate-200)}
+.btn-ghost:hover,.btn-ghost.is-hover{background:var(--slate-800);color:var(--slate-100)}
+.btn-ghost:active,.btn-ghost.is-pressed{background:var(--slate-700)}
+.btn-danger{background:#C93636;color:#fff}
+.btn-danger:hover,.btn-danger.is-hover{background:#AD2C2C}
+.btn-danger:active,.btn-danger.is-pressed{background:#8F2424}
+.btn.is-focus{outline:2px solid var(--blue-400);outline-offset:2px}
+.btn:disabled,.btn.is-disabled{background:var(--slate-800);color:var(--slate-500);border-color:var(--slate-700);cursor:not-allowed}
+.btn-ghost:disabled{background:transparent;border-color:transparent}
+.btn.icon{width:36px;padding:0}.btn.icon.s{width:28px}.btn.icon.l{width:44px}
+
+.field{display:grid;gap:6px;width:100%;max-width:260px}
+.field label{font:500 13px/16px var(--font);color:var(--slate-100)}
+.field label small{color:var(--tx-3);font-weight:400}
+.in{display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;background:var(--slate-950);border:1px solid var(--slate-600);border-radius:8px;color:var(--slate-100);transition:border-color .12s,box-shadow .12s}
+.in input,.in select{all:unset;flex:1;min-width:0;font:400 14px/20px var(--font);color:var(--slate-100)}
+.in input::placeholder{color:var(--slate-400)}
+.in svg.i{color:var(--slate-400)}
+.in:hover,.in.is-hover{border-color:var(--slate-500)}
+.in:focus-within,.in.is-focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(92,147,255,.25)}
+.in.is-error{border-color:var(--error)}
+.in.is-error:focus-within{box-shadow:0 0 0 3px rgba(255,107,107,.25)}
+.in.is-disabled{background:var(--slate-800);border-color:var(--slate-700);color:var(--slate-500);cursor:not-allowed}
+.in.is-disabled input{color:var(--slate-500);cursor:not-allowed}
+.in.is-disabled input::placeholder{color:var(--slate-500)}
+.help{font:400 12px/16px var(--font);color:var(--slate-300);display:flex;gap:6px;align-items:center}
+.help.err{color:var(--error)}
+.help svg.i{width:14px;height:14px}
+.in .kbd{font:500 11px var(--mono);color:var(--slate-300);border:1px solid var(--slate-600);border-radius:4px;padding:1px 5px}
+textarea.ta{all:unset;box-sizing:border-box;width:100%;min-height:76px;padding:8px 12px;background:var(--slate-950);border:1px solid var(--slate-600);border-radius:8px;font:400 14px/20px var(--font);color:var(--slate-100);white-space:pre-wrap}
+textarea.ta:focus{border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(92,147,255,.25)}
+.ctl{display:flex;gap:10px;align-items:center;color:var(--slate-100);font-size:14px;cursor:pointer}
+.chk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--slate-500);background:var(--slate-950);display:grid;place-items:center;color:#fff}
+.chk.on{background:var(--blue-600);border-color:var(--blue-600)}
+.chk.dis{background:var(--slate-800);border-color:var(--slate-700);color:var(--slate-500)}
+.chk svg.i{width:12px;height:12px;stroke-width:3}
+.tg{width:36px;height:20px;border-radius:999px;background:var(--slate-600);position:relative;display:block;flex:none}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s}
+.tg.on{background:var(--blue-600)}.tg.on::after{transform:translateX(16px)}
+.ctl.dis{color:var(--slate-500);cursor:not-allowed}.ctl.dis .tg{background:var(--slate-700)}.ctl.dis .tg::after{background:var(--slate-500)}
+
+.badge{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;font:500 12px/1 var(--font);border:1px solid;white-space:nowrap}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.b-success{color:var(--success);background:var(--success-bg);border-color:var(--success-line)}
+.b-warning{color:var(--warning);background:var(--warning-bg);border-color:var(--warning-line)}
+.b-error{color:var(--error);background:var(--error-bg);border-color:var(--error-line)}
+.b-info{color:var(--blue-300);background:var(--info-bg);border-color:var(--info-line)}
+.b-neutral{color:var(--slate-200);background:var(--slate-800);border-color:var(--slate-600)}
+.b-run::before{animation:pulse 1.4s ease-in-out infinite}
+.badge.solid{border-color:transparent;color:var(--slate-950)}
+.badge.solid.b-success{background:var(--success)}.badge.solid.b-warning{background:var(--warning)}.badge.solid.b-error{background:var(--error)}.badge.solid.b-info{background:var(--blue-300)}.badge.solid.b-neutral{background:var(--slate-300)}
+.badge.solid::before{background:var(--slate-950)}
+.badge.dis{color:var(--slate-500);background:var(--slate-800);border-color:var(--slate-700)}
+.badge.rm button{all:unset;cursor:pointer;display:grid;place-items:center;margin-right:-4px;width:16px;height:16px;border-radius:50%}
+.badge.rm button:hover{background:rgba(255,255,255,.14)}
+.badge.rm button svg.i{width:12px;height:12px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media (prefers-reduced-motion:reduce){.b-run::before{animation:none}html{scroll-behavior:auto}.tg::after{transition:none}}
+
+.nav-demo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:28px}
+.side{background:var(--slate-950);border:1px solid var(--line);border-radius:12px;padding:12px;display:grid;gap:2px;align-content:start}
+.side .grp{font:600 11px/16px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);padding:12px 10px 6px}
+.nv{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:8px;color:var(--slate-300);text-decoration:none;font:500 14px var(--font);cursor:pointer;border:0;background:none;width:100%;text-align:left}
+.nv:hover,.nv.is-hover{background:var(--slate-800);color:var(--slate-100)}
+.nv.active{background:rgba(47,108,246,.16);color:var(--blue-300)}
+.nv.active svg.i{color:var(--blue-400)}
+.nv.dis{color:var(--slate-500);cursor:not-allowed}
+.nv.dis:hover{background:none;color:var(--slate-500)}
+.nv .cnt{margin-left:auto;font:500 11px var(--mono);background:var(--slate-700);color:var(--slate-200);border-radius:999px;padding:2px 7px}
+.rail{width:56px;background:var(--slate-950);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:4px;align-content:start;justify-items:center}
+.rail .nv{width:36px;padding:0;justify-content:center}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-2);overflow-x:auto}
+.tab{all:unset;cursor:pointer;padding:10px 14px;margin-bottom:-1px;font:500 14px/20px var(--font);color:var(--slate-300);border-bottom:2px solid transparent;white-space:nowrap;box-sizing:border-box}
+.tab:hover,.tab.is-hover{color:var(--slate-100);border-bottom-color:var(--slate-500)}
+.tab.active{color:var(--blue-300);border-bottom-color:var(--blue-400)}
+.tab.dis{color:var(--slate-500);cursor:not-allowed}
+.tab.dis:hover{color:var(--slate-500);border-bottom-color:transparent}
+.tab:focus-visible{outline:2px solid var(--blue-400);outline-offset:-2px;border-radius:4px}
+.crumbs{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px}
+.crumbs a{color:var(--slate-300);text-decoration:none;padding:2px 4px;border-radius:4px}
+.crumbs a:hover{color:var(--slate-100);text-decoration:underline}
+.crumbs svg.i{width:14px;height:14px;color:var(--slate-500)}
+.crumbs .cur{color:var(--slate-100);font-weight:500}
+.spec-box{display:grid;gap:16px;margin-top:8px}
+.copy{margin-left:auto}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--slate-100);color:var(--slate-950);padding:10px 16px;border-radius:8px;font:500 13px var(--font);opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:50}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+footer.end{margin-top:72px;display:flex;flex-wrap:wrap;gap:12px 32px;justify-content:space-between;color:var(--tx-3);font:500 12px var(--mono)}
+@media (max-width:820px){
+  .frame-head{grid-template-columns:minmax(0,1fr)}
+  .type-row{grid-template-columns:minmax(0,1fr)}
+  .sp-row{grid-template-columns:80px 56px minmax(0,1fr)}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5l12 7.5-12 7.5z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.5v.01"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.01"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="3" width="6" height="6" rx="1.5"/><rect x="15" y="15" width="6" height="6" rx="1.5"/><path d="M6 9v3a3 3 0 003 3h6"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M7 8h10v3a5 5 0 01-10 0zM12 16v5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V11M10 20V4M16 20v-7M22 20H2"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h8M18 7h2M4 17h2M12 17h8"/><circle cx="15" cy="7" r="2.5"/><circle cx="9" cy="17" r="2.5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<!-- ====================== CABECERA ====================== -->
+<header class="top">
+  <div class="top-row">
+    <div class="brand"><span class="logo"><svg class="i" style="width:18px;height:18px"><use href="#i-bolt"/></svg></span>Vektor · Automatización empresarial</div>
+    <div class="meta">
+      <span class="chip">Versión <b>1.0.0</b></span>
+      <span class="chip">Estado <b>Listo para producción</b></span>
+      <span class="chip">Tema <b>Oscuro</b></span>
+      <span class="chip">Prefijo CSS <b>--vk-</b></span>
+      <span class="chip">Actualizado <b>02 oct 2026</b></span>
+    </div>
+  </div>
+  <h1>Design System <em>Vektor</em></h1>
+  <p class="lead">Tablero de referencia para diseñar y construir la aplicación web de automatización de procesos: flujos, integraciones, ejecuciones y monitoreo. Todo valor visual sale de un token. Todo componente documenta sus estados.</p>
+</header>
+
+<nav class="index" aria-label="Secciones del sistema de diseño">
+  <ul>
+    <li><a href="#ds-00"><span>DS-00</span>Resumen</a></li>
+    <li><a href="#ds-01"><span>DS-01</span>Color</a></li>
+    <li><a href="#ds-02"><span>DS-02</span>Tipografía</a></li>
+    <li><a href="#ds-03"><span>DS-03</span>Fundamentos</a></li>
+    <li><a href="#ds-04"><span>DS-04</span>Uso de componentes</a></li>
+    <li><a href="#ds-05"><span>DS-05</span>Componentes</a></li>
+  </ul>
+</nav>
+
+<!-- ====================== DS-00 ====================== -->
+<section class="frame-wrap" id="ds-00">
+  <div class="frame-label"><i></i>DS - 00 Resumen</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 00</span><h2>Resumen</h2></div>
+      <p>Qué es este sistema, para quién existe y bajo qué reglas se usa. Léelo antes de abrir cualquier otra sección. Las decisiones de este documento ganan sobre el gusto personal.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">00.1</span><h3>Contexto y alcance</h3>
+        <p>Vektor es una plataforma donde equipos de operaciones, finanzas y TI conectan aplicaciones, definen flujos de trabajo y supervisan su ejecución. Los usuarios pasan horas dentro de la herramienta, leen mucha información densa y toman decisiones con consecuencias: un flujo mal publicado puede enviar mil correos o mover dinero.</p>
+      </div>
+      <div class="grid g3">
+        <div class="card"><h4>Para quién</h4><p>Diseñadores de producto, ingenieros de frontend y QA. También product managers que necesitan validar propuestas contra reglas existentes antes de pedir componentes nuevos.</p></div>
+        <div class="card"><h4>Qué cubre</h4><p>Color, tipografía, espaciado, radios, elevación, anatomía y comportamiento de componentes base: botones, campos de formulario, insignias de estado y navegación.</p></div>
+        <div class="card"><h4>Qué no cubre</h4><p>Patrones de página completos (constructor de flujos, tablas de ejecución, ajustes de facturación). Esos viven en la librería de patrones y se construyen con estas piezas.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">00.2</span><h3>Principios de diseño</h3>
+        <p>Seis ideas que desempatan cuando dos soluciones parecen válidas. Si una propuesta rompe un principio, debe justificarlo por escrito en la revisión de diseño.</p>
+      </div>
+      <div class="grid g3">
+        <div class="card"><span class="k">P1</span><h4>Claridad antes que densidad</h4><p>La interfaz es densa porque el trabajo lo es, pero cada pantalla tiene una sola acción principal visible. Se agrupa con espacio y bordes suaves, no con más colores.</p></div>
+        <div class="card"><span class="k">P2</span><h4>El estado nunca se adivina</h4><p>Un flujo siempre está en un estado nombrado: borrador, en cola, ejecutando, completado, fallido o pausado. Se comunica con texto, icono y color a la vez, nunca solo con color.</p></div>
+        <div class="card"><span class="k">P3</span><h4>Seguro por defecto</h4><p>Las acciones destructivas o irreversibles piden confirmación y nombran lo que se afectará. El botón destructivo nunca es el predeterminado ni se coloca bajo el cursor tras otra acción.</p></div>
+        <div class="card"><span class="k">P4</span><h4>Teclado primero</h4><p>Todo lo que se hace con el ratón se hace con el teclado, con un orden de foco lógico y un anillo de foco siempre visible. Los usuarios avanzados trabajan sin soltar el teclado.</p></div>
+        <div class="card"><span class="k">P5</span><h4>Una fuente de verdad</h4><p>Ningún color, tamaño o sombra se escribe a mano en producto. Se referencia un token. Si falta uno, se propone en el sistema y no se inventa en la pantalla.</p></div>
+        <div class="card"><span class="k">P6</span><h4>Accesible desde el contraste</h4><p>Todo texto cumple WCAG 2.2 AA (4.5:1; 3:1 para texto grande y componentes de interfaz). El modo oscuro no es una excusa para grises ilegibles.</p></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">00.3</span><h3>Reglas generales de uso</h3></div>
+      <div class="grid g2">
+        <div class="card"><h4>Reglas obligatorias</h4>
+          <ol>
+            <li>Usa tokens semánticos (<code>--vk-text-primary</code>) en producto. Los primitivos (<code>--vk-slate-700</code>) solo se usan al definir tokens.</li>
+            <li>Una acción primaria por vista o por diálogo. El resto son secundarias o fantasma.</li>
+            <li>Los fondos se apilan de oscuro a claro: lienzo, superficie, elemento elevado, overlay. Nunca saltes más de un nivel.</li>
+            <li>El azul de marca es para acciones, foco y selección. No lo uses como decoración ni para indicar estados.</li>
+            <li>Los colores de estado siempre van acompañados de etiqueta o icono.</li>
+            <li>Todo componente interactivo implementa predeterminado, hover, foco, presionado y deshabilitado.</li>
+            <li>El espaciado y los radios provienen de la escala. Los valores intermedios (13 px, 18 px) no existen.</li>
+            <li>Las áreas de clic miden al menos 28 × 28 px; el tamaño estándar es 36 px de alto.</li>
+          </ol>
+        </div>
+        <div class="dd">
+          <div class="do"><b>Hacer</b>Pedir un componente nuevo cuando el mismo patrón aparece en tres pantallas distintas, con un ejemplo real y el problema que no resuelve el actual.</div>
+          <div class="dont"><b>Evitar</b>Copiar un botón y cambiarle el color para "que destaque". Si necesita destacar, es la acción primaria; si no lo es, no debe destacar.</div>
+          <div class="do"><b>Hacer</b>Usar espacio en blanco, no líneas, para separar grupos dentro de un panel. Reserva el borde para delimitar contenedores.</div>
+          <div class="dont"><b>Evitar</b>Mezclar tres o más colores de estado en una misma fila de tabla. Prioriza el estado más grave y deja el resto en gris.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">00.4</span><h3>Nomenclatura y versionado</h3>
+        <p>Los nombres de tokens describen intención, no apariencia. Así un cambio de marca no obliga a renombrar nada.</p>
+      </div>
+      <div class="grid g2">
+        <div class="card"><h4>Convención de tokens</h4>
+          <p>Formato <code>--vk-{categoría}-{rol}-{variante}-{estado}</code>.</p>
+          <ul>
+            <li><code>--vk-bg-surface</code>: fondo de panel.</li>
+            <li><code>--vk-text-secondary</code>: texto de apoyo.</li>
+            <li><code>--vk-action-primary-hover</code>: acción principal en hover.</li>
+            <li><code>--vk-status-error-border</code>: borde de error.</li>
+          </ul>
+        </div>
+        <div class="card"><h4>Versionado y cambios</h4>
+          <p>Seguimos versionado semántico. Un cambio de valor de token que altera el aspecto es <b>minor</b>; renombrar o eliminar un token es <b>major</b> y requiere una guía de migración.</p>
+          <ul>
+            <li><b>1.0.0</b> · Lanzamiento: tokens base, 4 familias de componentes.</li>
+            <li>Las propuestas se revisan los jueves en la sesión de diseño y ingeniería.</li>
+            <li>Un componente pasa a "Estable" con diseño, código, pruebas de accesibilidad y documentación.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DS-01 ====================== -->
+<section class="frame-wrap" id="ds-01">
+  <div class="frame-label"><i></i>DS - 01 Color</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 01</span><h2>Color</h2></div>
+      <p>Pizarra profunda con sesgo azul para las superficies y un azul tecnológico para la marca. La paleta primitiva define los valores; los roles semánticos deciden dónde se usa cada uno. Haz clic en cualquier muestra para copiar su hex.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">01.1</span><h3>Paleta primitiva</h3>
+        <p>Escalas de 100 (más claro) a 900 (más oscuro). El 950 existe solo para el lienzo de la aplicación. No uses primitivos directamente en producto.</p>
+      </div>
+      <div class="scale-name"><h4>Slate · escala de grises</h4><span>--vk-slate-{100–950}</span></div>
+      <div class="scale" id="sc-slate"></div>
+      <div style="height:32px"></div>
+      <div class="scale-name"><h4>Blue · color de marca</h4><span>--vk-blue-{100–900}</span></div>
+      <div class="scale" id="sc-blue"></div>
+      <div style="height:32px"></div>
+      <div class="scale-name"><h4>Estado · éxito, advertencia, error, información</h4><span>--vk-status-{tipo}-{fg|bg|border}</span></div>
+      <div class="status-row" id="sc-status"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">01.2</span><h3>Roles semánticos</h3>
+        <p>Cada rol apunta a un primitivo. La columna de contraste se calcula contra el fondo indicado y marca AA (≥ 4.5:1 en texto, ≥ 3:1 en bordes de componentes).</p>
+      </div>
+      <div class="rolegroups" id="roles"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DS-02 ====================== -->
+<section class="frame-wrap" id="ds-02">
+  <div class="frame-label"><i></i>DS - 02 Tipografía</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 02</span><h2>Tipografía</h2></div>
+      <p>Geist para interfaz y titulares, Geist Mono para datos, identificadores y código. Una sola familia sans mantiene la lectura rápida en pantallas densas. Escala base de 14 px.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">02.1</span><h3>Familias</h3></div>
+      <div class="faces">
+        <div class="card face"><div class="aa">Aa</div><h4>Geist · Interfaz y titulares</h4><p>Pesos 400, 500, 600. Alternativa del sistema: <code>system-ui</code>.</p>
+          <div class="weights"><span style="font-weight:400">Regular 400</span><span style="font-weight:500">Medium 500</span><span style="font-weight:600">Semibold 600</span></div></div>
+        <div class="card face m"><div class="aa">Aa</div><h4>Geist Mono · Datos y código</h4><p>Pesos 400, 500. Úsala para IDs de ejecución, rutas, JSON, métricas y atajos.</p>
+          <div class="weights" style="font-family:var(--mono)"><span style="font-weight:400">run_8f2a91</span><span style="font-weight:500">POST /v1/flows</span><span>00:03:42.118</span></div></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">02.2</span><h3>Escala tipográfica</h3>
+        <p>De Overline (subtítulos pequeños) a Display. Los pesos 600 se reservan para titulares; el cuerpo usa 400 y las etiquetas 500.</p>
+      </div>
+      <div>
+        <div class="type-row"><span class="nm">Display</span><div class="sample t-display">Automatiza sin límites</div><span class="sp">56 / 64 · 600 · −3%<br>Solo páginas de bienvenida</span></div>
+        <div class="type-row"><span class="nm">H1</span><div class="sample t-h1">Flujos de trabajo activos</div><span class="sp">40 / 48 · 600 · −2.5%<br>Título de página</span></div>
+        <div class="type-row"><span class="nm">H2</span><div class="sample t-h2">Resumen de ejecuciones</div><span class="sp">32 / 40 · 600 · −2%<br>Sección principal</span></div>
+        <div class="type-row"><span class="nm">H3</span><div class="sample t-h3">Historial de cambios</div><span class="sp">24 / 32 · 600 · −1.5%<br>Panel o modal</span></div>
+        <div class="type-row"><span class="nm">H4</span><div class="sample t-h4">Condiciones del disparador</div><span class="sp">20 / 28 · 600 · −1%<br>Grupo dentro de un panel</span></div>
+        <div class="type-row"><span class="nm">Body L</span><div class="sample t-bl">Conecta tus aplicaciones y define qué ocurre cuando un evento llega al sistema.</div><span class="sp">16 / 24 · 400<br>Texto introductorio</span></div>
+        <div class="type-row"><span class="nm">Body</span><div class="sample t-b">El flujo se ejecutará cada vez que se cree una factura nueva en tu sistema contable.</div><span class="sp">14 / 20 · 400<br>Texto estándar de la app</span></div>
+        <div class="type-row"><span class="nm">Label</span><div class="sample t-lb">Nombre del flujo</div><span class="sp">13 / 16 · 500<br>Etiquetas, botones, tabs</span></div>
+        <div class="type-row"><span class="nm">Caption</span><div class="sample t-cap">Última ejecución hace 3 minutos · 128 pasos</div><span class="sp">12 / 16 · 400<br>Ayuda y metadatos</span></div>
+        <div class="type-row"><span class="nm">Overline</span><div class="sample t-ov">Integraciones conectadas</div><span class="sp">11 / 16 · 600 · +8% · MAYÚS<br>Subtítulo de grupo</span></div>
+        <div class="type-row"><span class="nm">Code</span><div class="sample t-mono">run_8f2a91 → status: "completed"</div><span class="sp">13 / 20 · 500 mono<br>IDs, JSON, logs</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">02.3</span><h3>Reglas de escritura</h3>
+        <p>El texto es parte de la interfaz. Se escribe para quien opera el sistema, en español neutro, en tono directo y sin jerga interna.</p>
+      </div>
+      <div class="grid g3">
+        <div class="card"><h4>Voz y tono</h4><ul>
+          <li>Segunda persona informal ("tú") y voz activa.</li>
+          <li>Oraciones cortas. Una idea por oración.</li>
+          <li>Describe lo que pasa, no cómo está construido.</li>
+          <li>Sin exclamaciones ni humor en errores.</li></ul></div>
+        <div class="card"><h4>Capitalización</h4><ul>
+          <li>Mayúscula solo inicial en títulos, botones y etiquetas ("Crear flujo").</li>
+          <li>Nombres propios de integraciones tal como los escribe su marca.</li>
+          <li>Overline en mayúsculas solo mediante estilo, no al escribir.</li></ul></div>
+        <div class="card"><h4>Formato</h4><ul>
+          <li>Fechas relativas hasta 7 días ("hace 3 min"); después absolutas ("12 sep 2026").</li>
+          <li>Números con separador de miles y cifras tabulares en columnas.</li>
+          <li>Botones: verbo + objeto, máximo 3 palabras.</li>
+          <li>Truncar con elipsis y mostrar el valor completo al pasar el cursor.</li></ul></div>
+      </div>
+      <div class="sub">Ejemplos</div>
+      <div class="grid g2">
+        <div class="dd">
+          <div class="do"><b>Hacer · Botón</b>Publicar flujo</div>
+          <div class="do"><b>Hacer · Error</b>No se pudo conectar con Salesforce. Revisa que el token siga vigente y vuelve a intentarlo.</div>
+          <div class="do"><b>Hacer · Vacío</b>Aún no hay ejecuciones. Activa el flujo o lanza una prueba para ver resultados aquí.</div>
+        </div>
+        <div class="dd">
+          <div class="dont"><b>Evitar · Botón</b>Haz clic aquí para proceder con la publicación</div>
+          <div class="dont"><b>Evitar · Error</b>¡Ups! Algo salió mal. Error 500 en el webhook handler.</div>
+          <div class="dont"><b>Evitar · Vacío</b>No data.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DS-03 ====================== -->
+<section class="frame-wrap" id="ds-03">
+  <div class="frame-label"><i></i>DS - 03 Fundamentos</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 03</span><h2>Fundamentos</h2></div>
+      <p>Espaciado, radios y elevación. Tres escalas cortas que dan ritmo a toda la interfaz. En modo oscuro la elevación se comunica con superficies más claras y un borde, además de la sombra.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">03.1</span><h3>Espaciado</h3>
+        <p>Base de 4 px. Se aplica a padding, márgenes y huecos. Dentro de un componente usa 4–12; entre componentes 16–24; entre secciones 32–64.</p>
+      </div>
+      <div class="grid g2" style="align-items:start">
+        <div id="spacing"></div>
+        <div class="card"><h4>Cómo elegir</h4>
+          <ul>
+            <li><b>4 · 8</b>: icono y texto, elementos dentro de un campo.</li>
+            <li><b>12 · 16</b>: padding de botones, tarjetas compactas y filas.</li>
+            <li><b>24</b>: padding de paneles y separación entre campos.</li>
+            <li><b>32 · 48</b>: separación entre bloques de una página.</li>
+            <li><b>64</b>: márgenes de página en pantallas amplias.</li>
+          </ul>
+          <p style="margin-top:12px">Rejilla de página: 12 columnas, canal de 24 px, margen de 24 px (móvil 16 px). Puntos de quiebre: 640 · 1024 · 1280 · 1536.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">03.2</span><h3>Radio de borde</h3>
+        <p>Redondeo suave y consistente. Un elemento anidado usa un radio menor que su contenedor.</p>
+      </div>
+      <div class="radius-grid" id="radii"></div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">03.3</span><h3>Elevación y sombras</h3>
+        <p>Cinco niveles. A más altura, superficie más clara, borde más marcado y sombra más amplia.</p>
+      </div>
+      <div class="elev-grid">
+        <div class="ebox e0"><b>Nivel 0 · Base</b><span>--vk-elev-0<br>Sin sombra · página</span></div>
+        <div class="ebox e1"><b>Nivel 1 · Tarjeta</b><span>--vk-elev-1<br>0 1 2 · tarjetas, tablas</span></div>
+        <div class="ebox e2"><b>Nivel 2 · Dropdown</b><span>--vk-elev-2<br>0 4 12 · menús, popovers</span></div>
+        <div class="ebox e3"><b>Nivel 3 · Panel</b><span>--vk-elev-3<br>0 12 28 · paneles laterales</span></div>
+        <div class="ebox e4"><b>Nivel 4 · Modal</b><span>--vk-elev-4<br>0 24 56 · diálogos</span></div>
+      </div>
+      <div class="sub">Movimiento</div>
+      <div class="grid g3">
+        <div class="card"><h4>Rápido · 120 ms</h4><p>Hover, cambio de color y foco. Curva <code>ease-out</code>.</p></div>
+        <div class="card"><h4>Base · 200 ms</h4><p>Menús, tooltips, expandir filas. Curva <code>cubic-bezier(.2,0,0,1)</code>.</p></div>
+        <div class="card"><h4>Lento · 320 ms</h4><p>Paneles laterales y modales. Respeta <code>prefers-reduced-motion</code>: sustituye el movimiento por un cambio de opacidad.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DS-04 ====================== -->
+<section class="frame-wrap" id="ds-04">
+  <div class="frame-label"><i></i>DS - 04 Uso de componentes</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 04</span><h2>Uso de componentes</h2></div>
+      <p>Anatomía, comportamiento y pautas de cada componente. Esta sección explica el porqué de cada pieza; la siguiente la muestra en todos sus estados.</p>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">04.1</span><h3>Anatomía</h3>
+        <p>Cada parte tiene un nombre. Usa estos nombres en Figma, en el código y en las conversaciones de revisión.</p>
+      </div>
+      <div class="grid g2">
+        <div>
+          <div class="anat-stage" aria-label="Diagrama de anatomía de un botón">
+            <div class="anat"><span class="pin" data-n="2"><svg class="i"><use href="#i-play"/></svg></span><span class="pin b" data-n="3">Ejecutar flujo</span><span class="pin" data-n="4"><svg class="i"><use href="#i-down"/></svg></span></div>
+          </div>
+          <ul class="legend" style="margin-top:20px">
+            <li><i>1</i><span><b>Contenedor.</b> Alto 28 / 36 / 44, radio md (8), relleno según variante.</span></li>
+            <li><i>2</i><span><b>Icono inicial</b> (opcional). 16 px, hereda el color del texto, 8 px de separación.</span></li>
+            <li><i>3</i><span><b>Etiqueta.</b> Label 14 px / 500. Verbo + objeto, una sola línea.</span></li>
+            <li><i>4</i><span><b>Indicador final</b> (opcional). Chevron para menús, spinner en carga.</span></li>
+            <li><i>5</i><span><b>Anillo de foco.</b> 2 px, <code>blue-400</code>, 2 px de separación del contenedor.</span></li>
+          </ul>
+        </div>
+        <div>
+          <div class="field-wrap">
+            <div class="anat-in" style="margin-top:20px">
+              <div class="pin l" data-n="1" style="display:block"><label style="font:500 13px var(--font)">Nombre del flujo <small style="color:var(--tx-3);font-weight:400">(obligatorio)</small></label></div>
+              <div class="in is-focus pin r" data-n="2" style="display:flex"><svg class="i"><use href="#i-search"/></svg><input aria-label="Ejemplo" value="Sincronizar facturas" readonly><span class="kbd">⌘K</span></div>
+              <div class="help pin b l" data-n="3" style="display:flex">Usa un nombre que identifique el proceso.</div>
+            </div>
+          </div>
+          <ul class="legend" style="margin-top:20px">
+            <li><i>1</i><span><b>Etiqueta.</b> Siempre visible y sobre el campo; el placeholder nunca la sustituye.</span></li>
+            <li><i>2</i><span><b>Contenedor del campo.</b> Alto 36, borde 1 px <code>slate-600</code>, radio 8. Foco con borde azul y halo de 3 px.</span></li>
+            <li><i>3</i><span><b>Texto de ayuda o error.</b> Caption 12 px, con icono en errores.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">04.2</span><h3>Comportamiento y pautas por componente</h3></div>
+      <div class="grid g2">
+        <div class="card"><h4>Botones</h4>
+          <p><b>Principal</b>: la acción que avanza la tarea (Publicar, Guardar, Conectar). Máximo uno por vista. <b>Secundario</b>: alternativas del mismo nivel (Cancelar, Duplicar). <b>Fantasma</b>: acciones de baja prioridad en barras de herramientas. <b>Destructivo</b>: elimina o detiene, solo dentro de un diálogo de confirmación.</p>
+          <ul>
+            <li>En carga, el botón conserva su ancho, muestra spinner y bloquea clics repetidos.</li>
+            <li>Deshabilitado solo cuando falta información. Explica el motivo en un tooltip o texto de ayuda.</li>
+            <li>Orden en diálogos: secundario a la izquierda, principal a la derecha.</li>
+            <li>Teclado: <code>Tab</code> enfoca, <code>Enter</code> y <code>Espacio</code> activan.</li></ul></div>
+        <div class="card"><h4>Campos de texto</h4>
+          <p>Capturan una sola pieza de información. La etiqueta va siempre visible; el texto de ayuda aclara formato o consecuencias.</p>
+          <ul>
+            <li>Valida al salir del campo (<code>blur</code>), no en cada pulsación. Tras el primer error, valida mientras se escribe.</li>
+            <li>El mensaje de error dice qué corregir: "Usa un correo con formato nombre@empresa.com".</li>
+            <li>Conserva lo escrito ante un error. Nunca borres el campo.</li>
+            <li>Teclado: el error se asocia con <code>aria-describedby</code> y el campo con <code>aria-invalid="true"</code>.</li></ul></div>
+        <div class="card"><h4>Insignias de estado</h4>
+          <p>Resumen corto del estado de un objeto: flujo, ejecución, integración. No son botones ni se pueden pulsar, salvo la variante con quitar.</p>
+          <ul>
+            <li>Incluyen punto y texto. Nunca solo color.</li>
+            <li>Una por fila. Si hay varios estados, muestra el más grave.</li>
+            <li>"Ejecutando" pulsa el punto; con movimiento reducido queda fijo.</li>
+            <li>Vocabulario fijo: Borrador, En cola, Ejecutando, Completado, Pausado, Advertencia, Fallido.</li></ul></div>
+        <div class="card"><h4>Navegación</h4>
+          <p>La barra lateral lleva a áreas de primer nivel; las pestañas cambian la vista dentro de una página; las migas de pan muestran la ubicación.</p>
+          <ul>
+            <li>El elemento activo se marca con fondo azul tenue, texto e icono azul claro, y <code>aria-current="page"</code>.</li>
+            <li>Máximo 7 elementos en la barra lateral. Más allá, agrupa con encabezados.</li>
+            <li>La barra se colapsa a iconos con tooltip en pantallas menores a 1024 px.</li>
+            <li>Teclado: flechas entre pestañas, <code>Tab</code> entra y sale del grupo.</li></ul></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h"><span class="n">04.3</span><h3>Estados de interacción</h3>
+        <p>Todo componente interactivo implementa el mismo vocabulario de estados.</p>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Estado</th><th>Cuándo ocurre</th><th>Cambio visual</th></tr></thead>
+          <tbody>
+            <tr><td>Predeterminado</td><td>Reposo, sin interacción.</td><td>Valores base del componente.</td></tr>
+            <tr><td>Hover</td><td>El cursor está encima (solo punteros finos).</td><td>Un paso de la escala hacia más claro; borde un nivel más fuerte.</td></tr>
+            <tr><td>Foco</td><td>Navegación con teclado o clic en campo.</td><td>Anillo de 2 px <code>blue-400</code> o halo de 3 px al 25 %. Nunca se oculta.</td></tr>
+            <tr><td>Presionado</td><td>Mientras se mantiene el clic.</td><td>Un paso hacia más oscuro. Sin movimiento ni escala.</td></tr>
+            <tr><td>Deshabilitado</td><td>La acción no está disponible.</td><td>Fondo <code>slate-800</code>, texto <code>slate-500</code>, cursor <code>not-allowed</code>. Fuera del foco.</td></tr>
+            <tr><td>Error</td><td>Valor inválido tras validar.</td><td>Borde y mensaje en <code>error</code>, con icono.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== DS-05 ====================== -->
+<section class="frame-wrap" id="ds-05">
+  <div class="frame-label"><i></i>DS - 05 Componentes</div>
+  <div class="frame">
+    <div class="frame-head">
+      <div><span class="tag">DS — 05</span><h2>Componentes</h2></div>
+      <p>Biblioteca de componentes nativos con todos sus estados. Los ejemplos son interactivos: puedes pasar el cursor, enfocar con <code>Tab</code> y hacer clic. Las columnas de estado fuerzan el aspecto para revisión.</p>
+    </div>
+
+    <!-- 05.1 BOTONES -->
+    <div class="block">
+      <div class="block-h"><span class="n">05.1</span><h3>Botones</h3><p>Cuatro variantes, tres tamaños, con y sin icono.</p></div>
+      <div class="matrix"><div class="mx">
+        <div class="h">Variante</div><div class="h">Predeterminado</div><div class="h">Hover</div><div class="h">Foco</div><div class="h">Presionado</div><div class="h">Deshabilitado</div>
+
+        <div class="r">Principal</div>
+        <div><button class="btn btn-primary"><svg class="i"><use href="#i-play"/></svg>Publicar</button></div>
+        <div><button class="btn btn-primary is-hover"><svg class="i"><use href="#i-play"/></svg>Publicar</button></div>
+        <div><button class="btn btn-primary is-focus"><svg class="i"><use href="#i-play"/></svg>Publicar</button></div>
+        <div><button class="btn btn-primary is-pressed"><svg class="i"><use href="#i-play"/></svg>Publicar</button></div>
+        <div><button class="btn btn-primary" disabled><svg class="i"><use href="#i-play"/></svg>Publicar</button></div>
+
+        <div class="r">Secundario</div>
+        <div><button class="btn btn-secondary">Duplicar</button></div>
+        <div><button class="btn btn-secondary is-hover">Duplicar</button></div>
+        <div><button class="btn btn-secondary is-focus">Duplicar</button></div>
+        <div><button class="btn btn-secondary is-pressed">Duplicar</button></div>
+        <div><button class="btn btn-secondary" disabled>Duplicar</button></div>
+
+        <div class="r">Fantasma</div>
+        <div><button class="btn btn-ghost">Ver historial</button></div>
+        <div><button class="btn btn-ghost is-hover">Ver historial</button></div>
+        <div><button class="btn btn-ghost is-focus">Ver historial</button></div>
+        <div><button class="btn btn-ghost is-pressed">Ver historial</button></div>
+        <div><button class="btn btn-ghost" disabled>Ver historial</button></div>
+
+        <div class="r">Destructivo</div>
+        <div><button class="btn btn-danger"><svg class="i"><use href="#i-trash"/></svg>Eliminar</button></div>
+        <div><button class="btn btn-danger is-hover"><svg class="i"><use href="#i-trash"/></svg>Eliminar</button></div>
+        <div><button class="btn btn-danger is-focus"><svg class="i"><use href="#i-trash"/></svg>Eliminar</button></div>
+        <div><button class="btn btn-danger is-pressed"><svg class="i"><use href="#i-trash"/></svg>Eliminar</button></div>
+        <div><button class="btn btn-danger" disabled><svg class="i"><use href="#i-trash"/></svg>Eliminar</button></div>
+      </div></div>
+      <div class="sub">Tamaños y variantes de forma</div>
+      <div class="grid g3">
+        <div class="card"><span class="over">Tamaños · 28 / 36 / 44</span><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="btn btn-primary s">Pequeño</button><button class="btn btn-primary">Mediano</button><button class="btn btn-primary l">Grande</button></div></div>
+        <div class="card"><span class="over">Solo icono</span><div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:14px"><button class="btn btn-secondary icon s" aria-label="Agregar"><svg class="i"><use href="#i-plus"/></svg></button><button class="btn btn-secondary icon" aria-label="Copiar"><svg class="i"><use href="#i-copy"/></svg></button><button class="btn btn-ghost icon l" aria-label="Ajustes"><svg class="i"><use href="#i-sliders"/></svg></button></div></div>
+        <div class="card"><span class="over">Par de acciones en diálogo</span><div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px"><button class="btn btn-secondary">Cancelar</button><button class="btn btn-primary">Publicar flujo</button></div></div>
+      </div>
+    </div>
+
+    <!-- 05.2 CAMPOS -->
+    <div class="block">
+      <div class="block-h"><span class="n">05.2</span><h3>Campos de texto</h3><p>Etiqueta, valor y texto de ayuda en cada estado.</p></div>
+      <div class="matrix"><div class="mx c4" style="grid-template-columns:repeat(5,minmax(190px,1fr));min-width:950px">
+        <div class="h">Predeterminado</div><div class="h">Hover</div><div class="h">Foco</div><div class="h">Error</div><div class="h">Deshabilitado</div>
+        <div><div class="field"><label>Nombre del flujo</label><div class="in"><input aria-label="Nombre del flujo" placeholder="Ej. Alta de clientes"></div><span class="help">Visible para tu equipo.</span></div></div>
+        <div><div class="field"><label>Nombre del flujo</label><div class="in is-hover"><input aria-label="Nombre del flujo hover" placeholder="Ej. Alta de clientes"></div><span class="help">Visible para tu equipo.</span></div></div>
+        <div><div class="field"><label>Nombre del flujo</label><div class="in is-focus"><input aria-label="Nombre del flujo foco" value="Alta de clientes"></div><span class="help">Visible para tu equipo.</span></div></div>
+        <div><div class="field"><label>URL del webhook</label><div class="in is-error"><input aria-label="URL del webhook" aria-invalid="true" value="hooks.vektor"></div><span class="help err"><svg class="i"><use href="#i-alert"/></svg>Empieza con https://</span></div></div>
+        <div><div class="field"><label>ID del flujo</label><div class="in is-disabled"><input aria-label="ID del flujo" value="flw_48c2e" disabled></div><span class="help">No se puede editar.</span></div></div>
+      </div></div>
+      <div class="sub">Variantes</div>
+      <div class="grid g3">
+        <div class="card"><span class="over">Búsqueda con atajo</span><div class="field" style="margin-top:14px;max-width:none"><div class="in"><svg class="i"><use href="#i-search"/></svg><input aria-label="Buscar" placeholder="Buscar flujos"><span class="kbd">⌘K</span></div></div></div>
+        <div class="card"><span class="over">Selector</span><div class="field" style="margin-top:14px;max-width:none"><label>Disparador</label><div class="in"><select aria-label="Disparador"><option>Nueva factura creada</option><option>Formulario enviado</option><option>Cada día a las 09:00</option></select><svg class="i"><use href="#i-down"/></svg></div></div></div>
+        <div class="card"><span class="over">Área de texto</span><div class="field" style="margin-top:14px;max-width:none"><label>Descripción <small>(opcional)</small></label><textarea class="ta" aria-label="Descripción">Envía un resumen a Finanzas cuando se registre una factura mayor a 5.000 €.</textarea></div></div>
+        <div class="card"><span class="over">Casilla</span><div style="display:grid;gap:12px;margin-top:14px"><label class="ctl"><span class="chk on"><svg class="i"><use href="#i-check"/></svg></span>Notificar por correo</label><label class="ctl"><span class="chk"></span>Reintentar si falla</label><label class="ctl dis"><span class="chk dis"></span>Requiere plan Business</label></div></div>
+        <div class="card"><span class="over">Interruptor</span><div style="display:grid;gap:12px;margin-top:14px"><label class="ctl"><span class="tg on"></span>Flujo activo</label><label class="ctl"><span class="tg"></span>Modo de prueba</label><label class="ctl dis"><span class="tg"></span>Ejecución en paralelo</label></div></div>
+      </div>
+    </div>
+
+    <!-- 05.3 INSIGNIAS -->
+    <div class="block">
+      <div class="block-h"><span class="n">05.3</span><h3>Insignias de estado</h3><p>Siete estados del ciclo de vida de un flujo, en variante tenue y sólida.</p></div>
+      <div class="matrix"><div class="mx c4" style="grid-template-columns:130px repeat(4,minmax(150px,1fr));min-width:760px">
+        <div class="h">Estado</div><div class="h">Tenue</div><div class="h">Sólida</div><div class="h">Con quitar</div><div class="h">Deshabilitada</div>
+        <div class="r">Completado</div><div><span class="badge b-success">Completado</span></div><div><span class="badge solid b-success">Completado</span></div><div><span class="badge b-success rm">Completado<button aria-label="Quitar filtro Completado"><svg class="i"><use href="#i-x"/></svg></button></span></div><div><span class="badge dis">Completado</span></div>
+        <div class="r">Ejecutando</div><div><span class="badge b-info b-run">Ejecutando</span></div><div><span class="badge solid b-info b-run">Ejecutando</span></div><div><span class="badge b-info rm b-run">Ejecutando<button aria-label="Quitar filtro Ejecutando"><svg class="i"><use href="#i-x"/></svg></button></span></div><div><span class="badge dis">Ejecutando</span></div>
+        <div class="r">Advertencia</div><div><span class="badge b-warning">Advertencia</span></div><div><span class="badge solid b-warning">Advertencia</span></div><div><span class="badge b-warning rm">Advertencia<button aria-label="Quitar filtro Advertencia"><svg class="i"><use href="#i-x"/></svg></button></span></div><div><span class="badge dis">Advertencia</span></div>
+        <div class="r">Fallido</div><div><span class="badge b-error">Fallido</span></div><div><span class="badge solid b-error">Fallido</span></div><div><span class="badge b-error rm">Fallido<button aria-label="Quitar filtro Fallido"><svg class="i"><use href="#i-x"/></svg></button></span></div><div><span class="badge dis">Fallido</span></div>
+        <div class="r">En cola</div><div><span class="badge b-neutral">En cola</span></div><div><span class="badge solid b-neutral">En cola</span></div><div><span class="badge b-neutral rm">En cola<button aria-label="Quitar filtro En cola"><svg class="i"><use href="#i-x"/></svg></button></span></div><div><span class="badge dis">En cola</span></div>
+      </div></div>
+      <div class="sub">En contexto</div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>Flujo</th><th>Última ejecución</th><th>Duración</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>Alta de clientes → CRM</td><td>hace 3 min</td><td class="mono" style="font-variant-numeric:tabular-nums">00:03.2</td><td><span class="badge b-success">Completado</span></td></tr>
+            <tr><td>Conciliación bancaria</td><td>hace 12 min</td><td class="mono" style="font-variant-numeric:tabular-nums">01:48.9</td><td><span class="badge b-info b-run">Ejecutando</span></td></tr>
+            <tr><td>Reporte semanal de ventas</td><td>hace 1 h</td><td class="mono" style="font-variant-numeric:tabular-nums">00:21.5</td><td><span class="badge b-warning">Advertencia</span></td></tr>
+            <tr><td>Sincronizar inventario</td><td>hace 2 h</td><td class="mono" style="font-variant-numeric:tabular-nums">00:00.8</td><td><span class="badge b-error">Fallido</span></td></tr>
+            <tr><td>Alertas de facturación</td><td>Programado 09:00</td><td class="mono">—</td><td><span class="badge b-neutral">En cola</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 05.4 NAVEGACIÓN -->
+    <div class="block">
+      <div class="block-h"><span class="n">05.4</span><h3>Navegación</h3><p>Barra lateral, pestañas y migas de pan con sus estados.</p></div>
+      <div class="nav-demo">
+        <div>
+          <div class="sub" style="margin-top:0">Barra lateral · Predeterminado, hover, activo, deshabilitado</div>
+          <nav class="side" aria-label="Ejemplo de barra lateral">
+            <span class="grp">Espacio de trabajo</span>
+            <button class="nv"><svg class="i"><use href="#i-home"/></svg>Inicio</button>
+            <button class="nv is-hover"><svg class="i"><use href="#i-flow"/></svg>Flujos<span class="cnt">24</span></button>
+            <button class="nv active" aria-current="page"><svg class="i"><use href="#i-play"/></svg>Ejecuciones<span class="cnt">128</span></button>
+            <button class="nv"><svg class="i"><use href="#i-plug"/></svg>Integraciones</button>
+            <span class="grp">Análisis</span>
+            <button class="nv"><svg class="i"><use href="#i-chart"/></svg>Métricas</button>
+            <button class="nv dis" disabled><svg class="i"><use href="#i-eye"/></svg>Auditoría</button>
+          </nav>
+        </div>
+        <div>
+          <div class="sub" style="margin-top:0">Barra colapsada</div>
+          <div class="rail" role="navigation" aria-label="Barra colapsada">
+            <button class="nv" aria-label="Inicio"><svg class="i"><use href="#i-home"/></svg></button>
+            <button class="nv" aria-label="Flujos"><svg class="i"><use href="#i-flow"/></svg></button>
+            <button class="nv active" aria-label="Ejecuciones" aria-current="page"><svg class="i"><use href="#i-play"/></svg></button>
+            <button class="nv" aria-label="Integraciones"><svg class="i"><use href="#i-plug"/></svg></button>
+            <button class="nv dis" aria-label="Auditoría" disabled><svg class="i"><use href="#i-eye"/></svg></button>
+          </div>
+        </div>
+        <div style="display:grid;gap:28px;align-content:start">
+          <div>
+            <div class="sub" style="margin-top:0">Pestañas · Predeterminado, hover, activo, deshabilitado</div>
+            <div class="tabs" role="tablist">
+              <button class="tab active" role="tab" aria-selected="true">Resumen</button>
+              <button class="tab is-hover" role="tab">Pasos</button>
+              <button class="tab" role="tab">Registros</button>
+              <button class="tab dis" role="tab" disabled>Versiones</button>
+            </div>
+          </div>
+          <div>
+            <div class="sub" style="margin-top:0">Migas de pan</div>
+            <nav class="crumbs" aria-label="Ubicación">
+              <a href="#ds-05">Flujos</a><svg class="i"><use href="#i-right"/></svg>
+              <a href="#ds-05">Finanzas</a><svg class="i"><use href="#i-right"/></svg>
+              <span class="cur" aria-current="page">Conciliación bancaria</span>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05.5 HANDOFF -->
+    <div class="block">
+      <div class="block-h"><span class="n">05.5</span><h3>Especificaciones para desarrollo</h3><p>Tokens base exportados como variables CSS. Copia el bloque y pégalo en la hoja de estilos global.</p></div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-secondary s" id="copy-tokens"><svg class="i"><use href="#i-copy"/></svg>Copiar tokens</button></div>
+<pre class="code" id="tokens">:root {
+  color-scheme: dark;
+
+  /* Fondos */
+  --vk-bg-canvas:   #0B0E14;
+  --vk-bg-surface:  #11151D;
+  --vk-bg-raised:   #1A202C;
+  --vk-bg-overlay:  #262D3B;
+
+  /* Texto */
+  --vk-text-primary:   #E6E9EF;
+  --vk-text-secondary: #9AA3B2;
+  --vk-text-muted:     #7B8699;
+  --vk-text-disabled:  #4C5668;
+  --vk-text-brand:     #5C93FF;
+  --vk-text-on-brand:  #FFFFFF;
+
+  /* Bordes */
+  --vk-border-subtle:  #262D3B;
+  --vk-border-default: #353E4F;
+  --vk-border-strong:  #4C5668;
+  --vk-border-focus:   #5C93FF;
+
+  /* Acción */
+  --vk-action-primary:         #1D4FD8;
+  --vk-action-primary-hover:   #2F6CF6;
+  --vk-action-primary-pressed: #1A3FAD;
+  --vk-action-danger:          #C93636;
+
+  /* Estado */
+  --vk-status-success-fg: #3DD68C; --vk-status-success-bg: #0F2E24; --vk-status-success-border: #1F6B4C;
+  --vk-status-warning-fg: #F5B54A; --vk-status-warning-bg: #35270F; --vk-status-warning-border: #7A5A1E;
+  --vk-status-error-fg:   #FF6B6B; --vk-status-error-bg:   #3A1519; --vk-status-error-border:   #8A2F36;
+  --vk-status-info-fg:    #5C93FF; --vk-status-info-bg:    #12254F; --vk-status-info-border:    #24468F;
+
+  /* Espaciado */
+  --vk-space-1: 4px;  --vk-space-2: 8px;  --vk-space-3: 12px; --vk-space-4: 16px;
+  --vk-space-5: 24px; --vk-space-6: 32px; --vk-space-7: 48px; --vk-space-8: 64px;
+
+  /* Radio */
+  --vk-radius-sm: 4px; --vk-radius-md: 8px; --vk-radius-lg: 12px; --vk-radius-xl: 16px; --vk-radius-full: 999px;
+
+  /* Elevación */
+  --vk-elev-1: 0 1px 2px rgba(0,0,0,.5);
+  --vk-elev-2: 0 4px 12px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+  --vk-elev-3: 0 12px 28px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
+  --vk-elev-4: 0 24px 56px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.06);
+
+  /* Tipografía */
+  --vk-font-sans: "Geist", system-ui, sans-serif;
+  --vk-font-mono: "Geist Mono", ui-monospace, monospace;
+}</pre>
+      <div class="sub">Lista de verificación de entrega</div>
+      <div class="grid g3">
+        <div class="card"><h4>Diseño</h4><ul><li>Variables y estilos de Figma enlazados a tokens.</li><li>Cinco estados por componente interactivo.</li><li>Anotaciones de teclado y lector de pantalla.</li></ul></div>
+        <div class="card"><h4>Ingeniería</h4><ul><li>Sin valores literales de color o espacio.</li><li>Foco visible con <code>:focus-visible</code>.</li><li>Movimiento reducido respetado.</li></ul></div>
+        <div class="card"><h4>QA</h4><ul><li>Contraste AA verificado en cada estado.</li><li>Recorrido completo solo con teclado.</li><li>Pruebas con zoom 200 % y ventana de 360 px.</li></ul></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="end"><span>Vektor Design System · v1.0.0</span><span>Fuente de verdad: este tablero</span><span>Tokens: 60+ · Componentes: 4 familias</span></footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var slate=[["100","#E6E9EF"],["200","#C5CBD6"],["300","#9AA3B2"],["400","#7B8699"],["500","#4C5668"],["600","#353E4F"],["700","#262D3B"],["800","#1A202C"],["900","#11151D"],["950","#0B0E14"]];
+  var blue=[["100","#E3EEFF"],["200","#BFD6FF"],["300","#8FB6FF"],["400","#5C93FF"],["500","#2F6CF6"],["600","#1D4FD8"],["700","#1A3FAD"],["800","#173386"],["900","#14275F"]];
+  var status=[
+    ["Éxito","success",[["fg","#3DD68C"],["bg","#0F2E24"],["border","#1F6B4C"]]],
+    ["Advertencia","warning",[["fg","#F5B54A"],["bg","#35270F"],["border","#7A5A1E"]]],
+    ["Error","error",[["fg","#FF6B6B"],["bg","#3A1519"],["border","#8A2F36"]]],
+    ["Información","info",[["fg","#5C93FF"],["bg","#12254F"],["border","#24468F"]]]
+  ];
+  var BG="#11151D";
+
+  function lum(h){var c=[1,3,5].map(function(i){var v=parseInt(h.substr(i,2),16)/255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*c[0]+.7152*c[1]+.0722*c[2]}
+  function ratio(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+  function ink(h){return lum(h)>.32?"#0B0E14":"#FFFFFF"}
+
+  var toastEl=document.getElementById("toast"),tt;
+  function toast(m){toastEl.textContent=m;toastEl.classList.add("show");clearTimeout(tt);tt=setTimeout(function(){toastEl.classList.remove("show")},1600)}
+  function copy(text,msg){
+    function fb(){var t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.opacity="0";document.body.appendChild(t);t.select();try{document.execCommand("copy");toast(msg)}catch(e){toast("Selecciona y copia manualmente")}document.body.removeChild(t)}
+    try{navigator.clipboard.writeText(text).then(function(){toast(msg)},fb)}catch(e){fb()}
+  }
+  function sw(name,hex,extra){
+    var b=document.createElement("button");b.className="sw";b.type="button";
+    b.style.background=hex;b.style.color=ink(hex);
+    b.setAttribute("aria-label","Copiar "+name+" "+hex);
+    b.innerHTML="<b>"+name+"</b><span>"+hex+(extra||"")+"</span>";
+    b.addEventListener("click",function(){copy(hex,"Copiado "+hex)});
+    return b;
+  }
+  slate.forEach(function(s){document.getElementById("sc-slate").appendChild(sw(s[0],s[1]))});
+  blue.forEach(function(s){document.getElementById("sc-blue").appendChild(sw(s[0],s[1]))});
+  var st=document.getElementById("sc-status");
+  status.forEach(function(g){
+    var d=document.createElement("div");d.className="sgroup";
+    g[2].forEach(function(t){var b=sw(g[0]+" · "+t[0],t[1]);d.appendChild(b)});
+    st.appendChild(d);
+  });
+
+  /* Roles semánticos: [token, primitivo, hex, uso, contra, tipo(text|ui|none)] */
+  var roles=[
+    ["Fondos",[
+      ["bg.canvas","slate-950","#0B0E14","Lienzo de la app, detrás de todo",null,"none"],
+      ["bg.surface","slate-900","#11151D","Páginas y paneles base",null,"none"],
+      ["bg.raised","slate-800","#1A202C","Tarjetas, campos, filas de tabla",null,"none"],
+      ["bg.overlay","slate-700","#262D3B","Menús, popovers, hover de filas",null,"none"]
+    ]],
+    ["Texto · contraste sobre bg.surface",[
+      ["text.primary","slate-100","#E6E9EF","Títulos y contenido principal",BG,"text"],
+      ["text.secondary","slate-300","#9AA3B2","Descripciones y metadatos",BG,"text"],
+      ["text.muted","slate-400","#7B8699","Placeholders y ayudas secundarias",BG,"text"],
+      ["text.disabled","slate-500","#4C5668","Elementos deshabilitados (exento de AA)",BG,"exempt"],
+      ["text.brand","blue-400","#5C93FF","Enlaces y énfasis de marca",BG,"text"],
+      ["text.on-brand","white","#FFFFFF","Texto sobre action.primary","#1D4FD8","text"]
+    ]],
+    ["Bordes · contraste sobre bg.surface",[
+      ["border.subtle","slate-700","#262D3B","Divisores internos y filas",null,"none"],
+      ["border.default","slate-600","#353E4F","Contenedores y tarjetas",BG,"ui-soft"],
+      ["border.strong","slate-500","#4C5668","Campos de formulario y controles",BG,"ui-soft"],
+      ["border.focus","blue-400","#5C93FF","Anillo de foco y campo activo",BG,"ui"]
+    ]],
+    ["Interactivo · acciones",[
+      ["action.primary","blue-600","#1D4FD8","Botón principal en reposo","#FFFFFF","text"],
+      ["action.primary-hover","blue-500","#2F6CF6","Botón principal en hover","#FFFFFF","text"],
+      ["action.primary-pressed","blue-700","#1A3FAD","Botón principal presionado","#FFFFFF","text"],
+      ["action.secondary","slate-800","#1A202C","Botón secundario en reposo",null,"none"],
+      ["action.secondary-hover","slate-700","#262D3B","Botón secundario en hover",null,"none"],
+      ["action.selected","blue-600 · 16%","#14275F","Elemento de navegación activo (fondo)","#8FB6FF","text"],
+      ["action.danger","—","#C93636","Botón destructivo","#FFFFFF","text"]
+    ]],
+    ["Estados · texto sobre su fondo tenue",[
+      ["status.success","—","#3DD68C","Completado, conexión activa","#0F2E24","text"],
+      ["status.success.bg","—","#0F2E24","Fondo de insignias y avisos de éxito",null,"none"],
+      ["status.warning","—","#F5B54A","Advertencia, acción recomendada","#35270F","text"],
+      ["status.warning.bg","—","#35270F","Fondo de insignias y avisos de advertencia",null,"none"],
+      ["status.error","—","#FF6B6B","Fallo, validación incorrecta","#3A1519","text"],
+      ["status.error.bg","—","#3A1519","Fondo de insignias y avisos de error",null,"none"],
+      ["status.info","blue-300","#8FB6FF","Ejecutando, información neutral","#12254F","text"],
+      ["status.info.bg","—","#12254F","Fondo de insignias y avisos informativos",null,"none"]
+    ]]
+  ];
+  var host=document.getElementById("roles");
+  roles.forEach(function(g){
+    var wrap=document.createElement("div");
+    var rows=g[1].map(function(r){
+      var c="—",cls="";
+      if(r[4]){
+        var v=ratio(r[2],r[4]),min=r[5]==="ui"||r[5]==="ui-soft"?3:4.5;
+        if(r[5]==="exempt"){c=v.toFixed(1)+":1 · exento";cls="fail"}
+        else{c=v.toFixed(1)+":1 · "+(v>=min?"AA ✓":"bajo AA");cls=v>=min?"pass":"fail"}
+      }
+      return "<tr><td><span style='display:flex;align-items:center;gap:12px'><span class='role-swatch' style='background:"+r[2]+"'></span><code>--vk-"+r[0].replace(/\./g,"-")+"</code></span></td><td class='mono' style='font-family:var(--mono);font-size:12.5px'>"+r[1]+"</td><td class='mono' style='font-family:var(--mono);font-size:12.5px'>"+r[2]+"</td><td>"+r[3]+"</td><td><span class='ratio "+cls+"'>"+c+"</span></td></tr>";
+    }).join("");
+    wrap.innerHTML="<div class='sub' style='margin-top:0'>"+g[0]+"</div><div class='tbl'><table><thead><tr><th>Token</th><th>Primitivo</th><th>Hex</th><th>Uso</th><th>Contraste</th></tr></thead><tbody>"+rows+"</tbody></table></div>";
+    host.appendChild(wrap);
+  });
+
+  /* Espaciado y radios */
+  var sp=[["space-0",0],["space-1",4],["space-2",8],["space-3",12],["space-4",16],["space-5",24],["space-6",32],["space-7",48],["space-8",64]];
+  document.getElementById("spacing").innerHTML=sp.map(function(s){return "<div class='sp-row'><span class='mono' style='font:500 12.5px var(--mono);color:var(--tx)'>"+s[0]+"</span><span style='font:500 12.5px var(--mono);color:var(--tx-3)'>"+s[1]+" px</span><span class='sp-bar' style='width:"+s[1]*3+"px'></span></div>"}).join("");
+  var rd=[["none",0],["sm",4],["md",8],["lg",12],["xl",16],["full",999]];
+  var use={none:"Divisores, tablas a sangre",sm:"Casillas, kbd, etiquetas",md:"Botones y campos",lg:"Tarjetas y paneles",xl:"Modales y diálogos",full:"Insignias e interruptores"};
+  document.getElementById("radii").innerHTML=rd.map(function(r){var px=r[1]===999?"999 px":r[1]+" px";var rad=r[1]===999?"60px":r[1]+"px";return "<div><span class='rbox' style='border-top-left-radius:"+rad+";border-radius:"+rad+";border:1.5px solid var(--blue-400)'></span><b style='display:block;font:600 14px var(--font)'>radius-"+r[0]+"</b><span style='font:400 12px/18px var(--mono);color:var(--tx-3)'>"+px+"<br>"+use[r[0]]+"</span></div>"}).join("");
+
+  document.getElementById("copy-tokens").addEventListener("click",function(){copy(document.getElementById("tokens").textContent,"Tokens copiados")});
+})();
+</script>
